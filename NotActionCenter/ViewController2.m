@@ -18,7 +18,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = [NSString stringWithFormat:@"Title%ld",self.navigationController.viewControllers.count];
+    self.title = @"Title";//[NSString stringWithFormat:@"Title%ld",self.navigationController.viewControllers.count];
     [self mountNotActionWithKey:self.title];
     // Do any additional setup after loading the view.
 }
