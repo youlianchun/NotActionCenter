@@ -12,7 +12,7 @@
 @interface SendViewController ()
 @property (weak, nonatomic) IBOutlet UITextField *textField;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segment;
-@property (weak, nonatomic) IBOutlet UITextView *textView;
+@property (weak, nonatomic) IBOutlet UITextField *textView;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segYN;
 
 @end

@@ -61,10 +61,10 @@
 }
 
 -(void)transmitAction {
-    NSArray <NSString*>*arr = [self.actionNameArray_allWillDo copy];
-    [self.actionNameArray_allWillDo removeAllObjects];
-    NSDictionary <NSString *, id>* dict = [self.actionDict_allWillDo copy];
-    [self.actionDict_allWillDo removeAllObjects];
+    NSArray <NSString*>*arr = [_actionNameArray_allWillDo copy];
+    [_actionNameArray_allWillDo removeAllObjects];
+    NSDictionary <NSString *, id>* dict = [_actionDict_allWillDo copy];
+    [_actionDict_allWillDo removeAllObjects];
     dispatch_async(dispatch_get_main_queue(), ^{
         for (int i = 0; i<arr.count; i++) {
             [self.nodeObject notActionWithName:arr[i] object:dict[arr[i]]];

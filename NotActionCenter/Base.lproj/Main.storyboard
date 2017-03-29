@@ -130,15 +130,6 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="content" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="HGq-RX-rE6">
-                                <rect key="frame" x="10" y="183" width="355" height="100"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="100" id="2dJ-q5-hUu"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="HYz-jX-pJq">
                                 <rect key="frame" x="107" y="128.5" width="258" height="29"/>
                                 <segments>
@@ -147,19 +138,28 @@
                                 </segments>
                             </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RWa-ts-nuJ">
-                                <rect key="frame" x="168.5" y="293" width="39" height="30"/>
+                                <rect key="frame" x="168.5" y="243" width="39" height="30"/>
                                 <state key="normal" title=" 发送 "/>
                                 <connections>
                                     <action selector="send:" destination="oRa-Gq-r39" eventType="touchUpInside" id="rtb-PC-rfm"/>
                                 </connections>
                             </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="content" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xXV-g9-4he">
+                                <rect key="frame" x="10" y="183" width="355" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="xXV-g9-4he" firstAttribute="top" secondItem="SCM-rO-fg4" secondAttribute="bottom" constant="30" id="2M9-GT-SgO"/>
+                            <constraint firstItem="RWa-ts-nuJ" firstAttribute="top" secondItem="xXV-g9-4he" secondAttribute="bottom" constant="30" id="5K6-vp-jFt"/>
                             <constraint firstItem="BiG-t4-wRp" firstAttribute="centerY" secondItem="F8v-RS-RpJ" secondAttribute="centerY" id="7Wl-Ll-Je2"/>
                             <constraint firstItem="F8v-RS-RpJ" firstAttribute="leading" secondItem="Wjq-pS-kqL" secondAttribute="leading" constant="10" id="AqF-uP-90C"/>
                             <constraint firstItem="YUK-dX-3gc" firstAttribute="centerY" secondItem="P00-pa-Imu" secondAttribute="centerY" id="DQD-Qm-PRn"/>
                             <constraint firstItem="BiG-t4-wRp" firstAttribute="leading" secondItem="F8v-RS-RpJ" secondAttribute="trailing" constant="10" id="Hae-mi-kGQ"/>
+                            <constraint firstItem="xXV-g9-4he" firstAttribute="leading" secondItem="Wjq-pS-kqL" secondAttribute="leading" constant="10" id="JRS-HG-vyL"/>
                             <constraint firstAttribute="trailing" secondItem="BiG-t4-wRp" secondAttribute="trailing" constant="10" id="P3a-Hk-qtj"/>
                             <constraint firstItem="HYz-jX-pJq" firstAttribute="centerY" secondItem="SCM-rO-fg4" secondAttribute="centerY" id="XZf-tu-4eM"/>
                             <constraint firstAttribute="trailing" secondItem="HYz-jX-pJq" secondAttribute="trailing" constant="10" id="YNi-z3-fhA"/>
@@ -167,15 +167,12 @@
                             <constraint firstItem="SCM-rO-fg4" firstAttribute="leading" secondItem="Wjq-pS-kqL" secondAttribute="leading" constant="10" id="ZXe-ML-nq1"/>
                             <constraint firstItem="HYz-jX-pJq" firstAttribute="leading" secondItem="SCM-rO-fg4" secondAttribute="trailing" constant="10" id="Zt1-B7-2ay"/>
                             <constraint firstItem="RWa-ts-nuJ" firstAttribute="centerX" secondItem="Wjq-pS-kqL" secondAttribute="centerX" id="c9h-Ju-Pdg"/>
-                            <constraint firstItem="HGq-RX-rE6" firstAttribute="top" secondItem="SCM-rO-fg4" secondAttribute="bottom" constant="30" id="d7R-1A-jXE"/>
                             <constraint firstItem="P00-pa-Imu" firstAttribute="leading" secondItem="Wjq-pS-kqL" secondAttribute="leading" constant="10" id="eJx-sQ-FIo"/>
                             <constraint firstItem="P00-pa-Imu" firstAttribute="top" secondItem="F8v-RS-RpJ" secondAttribute="bottom" constant="30" id="iV3-bS-Kgw"/>
                             <constraint firstAttribute="trailing" secondItem="YUK-dX-3gc" secondAttribute="trailing" constant="10" id="jcn-3g-z34"/>
+                            <constraint firstAttribute="trailing" secondItem="xXV-g9-4he" secondAttribute="trailing" constant="10" id="lNq-hW-uhJ"/>
                             <constraint firstItem="SCM-rO-fg4" firstAttribute="top" secondItem="P00-pa-Imu" secondAttribute="bottom" constant="30" id="oc3-pc-F0f"/>
-                            <constraint firstItem="RWa-ts-nuJ" firstAttribute="top" secondItem="HGq-RX-rE6" secondAttribute="bottom" constant="10" id="svr-kF-kVP"/>
                             <constraint firstItem="F8v-RS-RpJ" firstAttribute="top" secondItem="4Nl-Aj-OVH" secondAttribute="bottom" constant="10" id="t2a-pz-e91"/>
-                            <constraint firstItem="HGq-RX-rE6" firstAttribute="leading" secondItem="Wjq-pS-kqL" secondAttribute="leading" constant="10" id="yoa-wT-6f1"/>
-                            <constraint firstAttribute="trailing" secondItem="HGq-RX-rE6" secondAttribute="trailing" constant="10" id="zOk-pL-wBA"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="8cB-XZ-h0i"/>
@@ -183,12 +180,12 @@
                         <outlet property="segYN" destination="HYz-jX-pJq" id="u1v-iK-AkU"/>
                         <outlet property="segment" destination="YUK-dX-3gc" id="DNu-Og-3ZU"/>
                         <outlet property="textField" destination="BiG-t4-wRp" id="xg6-5O-KCu"/>
-                        <outlet property="textView" destination="HGq-RX-rE6" id="1iW-6T-mtA"/>
+                        <outlet property="textView" destination="xXV-g9-4he" id="El2-aJ-0dX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vdi-PC-bfr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1164" y="191"/>
+            <point key="canvasLocation" x="1164" y="190.25487256371815"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="RxK-Qe-0nf">

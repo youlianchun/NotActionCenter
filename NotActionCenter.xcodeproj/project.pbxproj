@@ -143,6 +143,7 @@
 				TargetAttributes = {
 					A96F11851E8A548400D36DFF = {
 						CreatedOnToolsVersion = 8.3;
+						DevelopmentTeam = 5ATRCX89M9;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -312,9 +313,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 5ATRCX89M9;
 				INFOPLIST_FILE = NotActionCenter/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.ylchun.NotActionCenter;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ppsports.ylchun.NotActionCenter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -323,9 +325,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 5ATRCX89M9;
 				INFOPLIST_FILE = NotActionCenter/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.ylchun.NotActionCenter;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ppsports.ylchun.NotActionCenter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
