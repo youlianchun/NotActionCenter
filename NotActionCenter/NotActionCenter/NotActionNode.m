@@ -21,7 +21,7 @@
 
 @property (nonatomic, retain) NSMutableDictionary <NSString *, id>* actionDict_allWillDo;//同名事件近保留最新一个
 
-@property (nonatomic, readonly) BOOL isLive;//是否活跃
+@property (nonatomic, readonly) BOOL isLive;//是否活跃(对象存在且挂载中)
 @end
 
 @implementation NotActionNode

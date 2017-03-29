@@ -14,10 +14,10 @@
 @end
 
 @interface NotActionNode ()
-@property (nonatomic, copy) NSString *nodeObjectKey;
+@property (nonatomic, copy) NSString *nodeObjectKey;//nodeObject.nodeKey
 @property (nonatomic, weak) id<NotActionNodeProtocol> nodeObject;
 @property (nonatomic, readonly) BOOL manualTrigger;//手动触发通知, 默认NO,
-@property (nonatomic, readonly) BOOL isLive;//是否活跃
+@property (nonatomic, readonly) BOOL isLive;//是否活跃(对象存在且挂载中)
 -(void)transmitAction;
 -(void)receiveActionWithName:(NSString*)actionName object:(id)object transmitAtOnce:(BOOL)atOnce;
 @end
