@@ -14,7 +14,7 @@
 @end
 
 @interface NotActionNode ()
-@property (nonatomic, copy) NSString *nodeObjectKey;
+@property (nonatomic, copy) NSString *nodeObjectKey;//nodeObject.nodeKey
 @property (nonatomic, weak) NSObject<NotActionNodeProtocol> * nodeObject;
 
 @property (nonatomic, retain) NSMutableArray <NSString*>*actionNameArray_allWillDo;//按照时间排序
