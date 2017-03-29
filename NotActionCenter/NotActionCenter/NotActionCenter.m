@@ -14,7 +14,7 @@
 @end
 
 @interface NotActionNode ()
-@property (nonatomic, copy) NSString *nodeKey;
+@property (nonatomic, copy) NSString *nodeObjectKey;
 @property (nonatomic, weak) id<NotActionNodeProtocol> nodeObject;
 @property (nonatomic, readonly) BOOL manualTrigger;//手动触发通知, 默认NO,
 @property (nonatomic, readonly) BOOL isLive;//是否活跃
@@ -168,7 +168,7 @@ static NotActionCenter* _kDefaultCenter;
         NSMutableArray *arr = [dict objectForKey:key];
         for (int i=0; i<arr.count; i++) {
             NotActionNode *notActionNode = arr[i];
-            if ([notActionNode.nodeKey isEqualToString:nodeKey]) {
+            if ([notActionNode.nodeObjectKey isEqualToString:nodeKey]) {
                 [arr removeObject:notActionNode];
                 break;
             }
@@ -198,7 +198,7 @@ static NotActionCenter* _kDefaultCenter;
         NSMutableArray *arr = [dict objectForKey:oldKey];
         for (int i=0; i<arr.count; i++) {
             NotActionNode *notActionNode = arr[i];
-            if ([notActionNode.nodeKey isEqualToString:nodeKey]) {
+            if ([notActionNode.nodeObjectKey isEqualToString:nodeKey]) {
                 [arr removeObject:notActionNode];
                 break;
             }
@@ -215,7 +215,7 @@ static NotActionCenter* _kDefaultCenter;
     
     NotActionNode *notActionNode = [[NotActionNode alloc] init];
     notActionNode.nodeObject = node;
-    notActionNode.nodeKey = nodeKey;
+    notActionNode.nodeObjectKey = nodeKey;
     [arr addObject:notActionNode];
     
 }
@@ -231,12 +231,12 @@ static NotActionCenter* _kDefaultCenter;
         NotActionNode *notActionNode = arr[i];
         if (notActionNode) {
             if (notActionNode.isLive) {
-                if ([notActionNode.nodeKey isEqual:nodeKey]) {
+                if ([notActionNode.nodeObjectKey isEqual:nodeKey]) {
                     [notActionNode transmitAction];
                 }
             }else{
                 [arr removeObject:notActionNode];
-                [_notActionNodeKeyDict removeObjectForKey:notActionNode.nodeKey];
+                [_notActionNodeKeyDict removeObjectForKey:notActionNode.nodeObjectKey];
                 unLive = YES;
                 i--;
             }
@@ -260,7 +260,7 @@ static NotActionCenter* _kDefaultCenter;
                     NotActionNode *notActionNode = arr[i];
                     if (!notActionNode.isLive) {
                         [arr removeObject:notActionNode];
-                        [_notActionNodeKeyDict removeObjectForKey:notActionNode.nodeKey];
+                        [_notActionNodeKeyDict removeObjectForKey:notActionNode.nodeObjectKey];
                         unLive = YES;
                         i--;
                     }

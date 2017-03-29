@@ -8,8 +8,13 @@
 
 #import "NotActionNode.h"
 
+@interface NSObject ()<NotActionCenterFunction>
+@property (nonatomic, readonly)BOOL *isMountNotAction;
+
+@end
+
 @interface NotActionNode ()
-@property (nonatomic, copy) NSString *nodeKey;
+@property (nonatomic, copy) NSString *nodeObjectKey;
 @property (nonatomic, weak) NSObject<NotActionNodeProtocol> * nodeObject;
 
 @property (nonatomic, retain) NSMutableArray <NSString*>*actionNameArray_allWillDo;//按照时间排序
@@ -42,7 +47,10 @@
 }
 
 -(BOOL)isLive {
-    return self.nodeObject != nil;
+    if (self.nodeObject) {
+        return self.nodeObject.isMountNotAction;
+    }
+    return NO;
 }
 
 -(void)receiveActionWithName:(NSString*)actionName object:(id)object transmitAtOnce:(BOOL)atOnce {
