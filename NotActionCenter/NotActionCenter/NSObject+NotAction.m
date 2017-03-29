@@ -83,8 +83,8 @@
 
 - (NSString*)uuid {
     CFUUIDRef uuid = CFUUIDCreate(nil);
-    CFStringRef uuidString = CFUUIDCreateString( nil, uuid );
-    NSString * result = (NSString *)CFBridgingRelease(CFStringCreateCopy( NULL, uuidString));
+    CFStringRef uuidString = CFUUIDCreateString(nil, uuid);
+    NSString *result = (NSString *)CFBridgingRelease(CFStringCreateCopy(NULL, uuidString));
     CFRelease(uuid);
     CFRelease(uuidString);
     return result;
