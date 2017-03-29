@@ -50,7 +50,7 @@
     [self.actionDict_allWillDo removeObjectForKey:actionName];
     if (atOnce) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.nodeObject notActionWithName:actionName object:object];
+            [self transmitActionWithName:actionName object:object];
         });
     }else{
         [self.actionNameArray_allWillDo addObject:actionName];
@@ -67,10 +67,19 @@
     [_actionDict_allWillDo removeAllObjects];
     dispatch_async(dispatch_get_main_queue(), ^{
         for (int i = 0; i<arr.count; i++) {
-            [self.nodeObject notActionWithName:arr[i] object:dict[arr[i]]];
+            NSString *actionName = arr[i];
+            id object = dict[arr[i]];
+            [self transmitActionWithName:actionName object:object];
         }
     });
 }
 
+-(void)transmitActionWithName:(NSString*)actionName object:(id)object {
+    if ([actionName isEqualToString:kNotActionCenter_unMount]) {
+        [self.nodeObject unMountNotAction];
+    }else{
+        [self.nodeObject notActionWithName:actionName object:object];
+    }
+}
 
 @end

@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "NotActionNode.h"
 
+
 @interface NotActionCenter : NSObject
 
 -(void)pushNotActionAtOnce:(BOOL)atOnce toClass:(Class)cls key:(NSString*)key actionName:(NSString*)actionName object:(id)object;
