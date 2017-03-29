@@ -231,7 +231,9 @@ static NotActionCenter* _kDefaultCenter;
         NotActionNode *notActionNode = arr[i];
         if (notActionNode) {
             if (notActionNode.isLive) {
-                [notActionNode transmitAction];
+                if ([notActionNode.nodeKey isEqual:nodeKey]) {
+                    [notActionNode transmitAction];
+                }
             }else{
                 [arr removeObject:notActionNode];
                 [_notActionNodeKeyDict removeObjectForKey:notActionNode.nodeKey];
