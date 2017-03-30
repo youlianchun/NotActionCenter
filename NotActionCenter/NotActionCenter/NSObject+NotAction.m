@@ -21,7 +21,6 @@
 @interface NSObject ()<NotActionCenterFunction>
 @property (nonatomic, copy)NSString *nodeKey;
 @property (nonatomic, readonly)BOOL *isMountNotAction;
-//@property (nonatomic, retain)NSObject *SELF;
 @end
 
 @implementation NSObject (NotAction)
@@ -59,14 +58,6 @@
         return NO;
     }
 }
-
-//-(NSObject *)SELF {
-//    return objc_getAssociatedObject(self, @selector(SELF));
-//}
-//
-//-(void)setSELF:(NSObject *)SELF {
-//    objc_setAssociatedObject(self, @selector(SELF), SELF, OBJC_ASSOCIATION_RETAIN);
-//}
 
 -(NSString *)nodeKey {
     NSString *nodeKey = objc_getAssociatedObject(self, @selector(nodeKey));
