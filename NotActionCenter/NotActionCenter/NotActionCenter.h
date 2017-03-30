@@ -11,7 +11,6 @@
 
 @interface NotActionCenter : NSObject
 
-
 /**
  发送事件
  atOnce NO时同名事件近保留最新一个
