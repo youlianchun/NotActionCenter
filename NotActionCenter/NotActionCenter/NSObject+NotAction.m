@@ -89,4 +89,5 @@
     CFRelease(uuidString);
     return result;
 }
+
 @end
