@@ -81,6 +81,8 @@ static NotActionCenter* _kDefaultCenter;
     _notActionNodeDict_map = nil;
 }
 
+#pragma mark- GET SET
+
 -(NotActionNodeDict_NodeKey *)notActionNodeDict_node {
     if (!_notActionNodeDict_node) {
         _notActionNodeDict_node = [NotActionNodeDict_NodeKey dictionary];
@@ -94,6 +96,8 @@ static NotActionCenter* _kDefaultCenter;
     }
     return _notActionNodeDict_map;
 }
+
+#pragma mark- pushNotAction
 
 -(void)pushNotActionAtOnce:(BOOL)atOnce toClass:(Class)cls key:(NSString*)key actionName:(NSString*)actionName object:(id)object {
     if (cls == nil) {
@@ -158,6 +162,7 @@ static NotActionCenter* _kDefaultCenter;
     }];
 }
 
+#pragma mark- unMount
 
 -(void)unMountWithNode:(NSObject<NotActionNodeProtocol>*)node {
     NSString* nodeKey = node.nodeKey;
@@ -183,6 +188,8 @@ static NotActionCenter* _kDefaultCenter;
     }
     [_notActionNodeDict_node removeObjectForKey:nodeKey];
 }
+
+#pragma mark- mount
 
 -(void)mountWithNode:(NSObject<NotActionNodeProtocol>*)node key:(NSString*)key {
     NSString* nodeKey = node.nodeKey;
@@ -224,6 +231,8 @@ static NotActionCenter* _kDefaultCenter;
         [self unMountWithActionNode:notActionNode];
     }
 }
+
+#pragma mark- unLiveClear
 
 -(void)unLiveClear_start {
     if (!self.unLiveClearing) {

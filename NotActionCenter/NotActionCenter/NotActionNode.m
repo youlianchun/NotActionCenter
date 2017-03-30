@@ -30,6 +30,7 @@
     _actionDict_allWillDo = nil;
 }
 
+#pragma mark- GET SET
 
 -(NSMutableArray<NSString *> *)actionNameArray_allWillDo {
     if (!_actionNameArray_allWillDo) {
@@ -52,6 +53,8 @@
     return NO;
 }
 
+#pragma mark- receiveAction
+
 -(void)receiveActionWithName:(NSString*)actionName object:(id)object transmitAtOnce:(BOOL)atOnce {
     [self.actionNameArray_allWillDo removeObject:actionName];
     [self.actionDict_allWillDo removeObjectForKey:actionName];
@@ -66,6 +69,8 @@
         }
     }
 }
+
+#pragma mark- transmitAction
 
 -(void)transmitAction {
     NSArray <NSString*>*arr = [_actionNameArray_allWillDo copy];
