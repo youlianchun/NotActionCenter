@@ -36,7 +36,11 @@
 -(void)mountNotActionWithKey:(NSString*)key {
     [NotActionCenter actionQueuSyncDo:^{
         if (!self.isMountNotAction) {
-            [[NotActionCenter defaultCenter] mountWithNode:self key:key];
+            NSString *k = key;
+            if (k == 0) {
+                k = NSStringFromClass([self class]);
+            }
+            [[NotActionCenter defaultCenter] mountWithNode:self key:k];
         }
     }];
 }
