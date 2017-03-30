@@ -9,7 +9,7 @@
 #import "NotActionNode.h"
 
 @interface NSObject ()<NotActionCenterFunction>
-@property (nonatomic, readonly)BOOL *isMountNotAction;
+@property (nonatomic, readonly)BOOL isMountNotAction;
 @end
 
 @interface NotActionNode ()

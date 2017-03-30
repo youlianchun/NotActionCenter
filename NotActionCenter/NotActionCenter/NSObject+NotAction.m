@@ -20,7 +20,7 @@
 
 @interface NSObject ()<NotActionCenterFunction>
 @property (nonatomic, copy)NSString *nodeKey;
-@property (nonatomic, readonly)BOOL *isMountNotAction;
+@property (nonatomic, readonly)BOOL isMountNotAction;
 @end
 
 @implementation NSObject (NotAction)
