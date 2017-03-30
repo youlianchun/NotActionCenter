@@ -29,7 +29,7 @@
     // Dispose of any resources that can be recreated.
 }
 - (IBAction)send:(id)sender {
-    NSString *name = @"";
+    NSString *name = @"name";
     NSString*param = self.textView.text;
     NSString *key = self.textField.text;
     BOOL YN = self.segYN.selectedSegmentIndex==0?YES:NO;
