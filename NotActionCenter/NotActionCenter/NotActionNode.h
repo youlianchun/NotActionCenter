@@ -14,14 +14,15 @@ static NSString* kNotActionCenter_unMount = @"kNotActionCenter_unMount";
 @optional
 
 /**
- 手动触发通知事件
+ 手动触发通知事件 
+ 发送时候atOnce为NO时候
  */
 -(void)manualTriggerNotAction;//禁止实现接口
 
 /**
  挂载通知
 
- @param key <#key description#>
+ @param key 定位关键字
  */
 -(void)mountNotActionWithKey:(NSString*)key;//禁止实现接口
 

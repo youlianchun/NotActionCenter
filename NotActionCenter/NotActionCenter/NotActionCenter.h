@@ -11,10 +11,38 @@
 
 @interface NotActionCenter : NSObject
 
+
+/**
+ 发送事件
+ atOnce NO时同名事件近保留最新一个
+
+ @param atOnce YES 立刻执行，NO 时目标对象执行 manualTriggerNotAction触发
+ @param cls 目标类
+ @param key 定位关键字
+ @param actionName 事件名
+ @param object 参数
+ */
 -(void)pushNotActionAtOnce:(BOOL)atOnce toClass:(Class<NotActionNodeProtocol>)cls key:(NSString*)key actionName:(NSString*)actionName object:(id)object;
 
+/**
+ 类组播事件
+ atOnce NO时同名事件近保留最新一个
+
+ @param atOnce YES 立刻执行，NO 时目标对象执行 manualTriggerNotAction触发
+ @param cls 目标类
+ @param actionName 事件名
+ @param object 参数
+ */
 -(void)pushNotActionAtOnce:(BOOL)atOnce toClass:(Class<NotActionNodeProtocol>)cls actionName:(NSString*)actionName object:(id)object;
 
+/**
+ 广播事件
+ atOnce NO时同名事件近保留最新一个
+
+ @param atOnce YES 立刻执行，NO 时目标对象执行 manualTriggerNotAction触发
+ @param actionName 事件名
+ @param object 参数
+ */
 -(void)pushNotActionAtOnce:(BOOL)atOnce actionName:(NSString*)actionName object:(id)object;
 
 +(NotActionCenter*)defaultCenter;
