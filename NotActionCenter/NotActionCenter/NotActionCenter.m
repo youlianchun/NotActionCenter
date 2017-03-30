@@ -99,16 +99,16 @@ static NotActionCenter* _kDefaultCenter;
 
 #pragma mark- pushNotAction
 
--(void)pushNotActionAtOnce:(BOOL)atOnce toClass:(Class)cls key:(NSString*)key actionName:(NSString*)actionName object:(id)object {
+-(void)pushActionAtOnce:(BOOL)atOnce toClass:(Class)cls key:(NSString*)key actionName:(NSString*)actionName object:(id)object {
     if (cls == nil) {
-        [self pushNotActionAtOnce:atOnce actionName:actionName object:object];
+        [self pushActionAtOnce:atOnce actionName:actionName object:object];
     }else {
         if (![cls conformsToProtocol:@protocol(NotActionNodeProtocol)]) {
             NSString *error = [NSString stringWithFormat:@"⚠️ toClass: %@ 未继承NotActionNodeProtocol协议", NSStringFromClass(cls)];
             NSAssert(false, error);
         }
         if (key.length == 0){
-            [self pushNotActionAtOnce:atOnce toClass:cls actionName:actionName object:object];
+            [self pushActionAtOnce:atOnce toClass:cls actionName:actionName object:object];
         }else{
             [NotActionCenter actionQueuSyncDo:^{
                 NSString* class = NSStringFromClass([cls class]);
@@ -127,7 +127,7 @@ static NotActionCenter* _kDefaultCenter;
     }
 }
 
--(void)pushNotActionAtOnce:(BOOL)atOnce toClass:(Class)cls actionName:(NSString*)actionName object:(id)object {
+-(void)pushActionAtOnce:(BOOL)atOnce toClass:(Class)cls actionName:(NSString*)actionName object:(id)object {
     if (![cls conformsToProtocol:@protocol(NotActionNodeProtocol)]) {
         NSString *error = [NSString stringWithFormat:@"⚠️ toClass: %@ 未继承NotActionNodeProtocol协议", NSStringFromClass(cls)];
         NSAssert(false, error);
@@ -149,7 +149,7 @@ static NotActionCenter* _kDefaultCenter;
     }];
 }
 
--(void)pushNotActionAtOnce:(BOOL)atOnce actionName:(NSString*)actionName object:(id)object {
+-(void)pushActionAtOnce:(BOOL)atOnce actionName:(NSString*)actionName object:(id)object {
     [NotActionCenter actionQueuSyncDo:^{
         NSArray *arr = [_notActionNodeDict_node allValues];
         for (NotActionNode *notActionNode in arr) {

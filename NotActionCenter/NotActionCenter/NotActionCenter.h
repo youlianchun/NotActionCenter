@@ -21,7 +21,7 @@
  @param actionName 事件名
  @param object 参数
  */
--(void)pushNotActionAtOnce:(BOOL)atOnce toClass:(Class<NotActionNodeProtocol>)cls key:(NSString*)key actionName:(NSString*)actionName object:(id)object;
+-(void)pushActionAtOnce:(BOOL)atOnce toClass:(Class<NotActionNodeProtocol>)cls key:(NSString*)key actionName:(NSString*)actionName object:(id)object;
 
 /**
  类组播事件
@@ -32,7 +32,7 @@
  @param actionName 事件名
  @param object 参数
  */
--(void)pushNotActionAtOnce:(BOOL)atOnce toClass:(Class<NotActionNodeProtocol>)cls actionName:(NSString*)actionName object:(id)object;
+-(void)pushActionAtOnce:(BOOL)atOnce toClass:(Class<NotActionNodeProtocol>)cls actionName:(NSString*)actionName object:(id)object;
 
 /**
  广播事件
@@ -42,7 +42,7 @@
  @param actionName 事件名
  @param object 参数
  */
--(void)pushNotActionAtOnce:(BOOL)atOnce actionName:(NSString*)actionName object:(id)object;
+-(void)pushActionAtOnce:(BOOL)atOnce actionName:(NSString*)actionName object:(id)object;
 
 +(NotActionCenter*)defaultCenter;
 

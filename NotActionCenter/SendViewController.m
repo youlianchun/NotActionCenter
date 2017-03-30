@@ -40,7 +40,7 @@
     if (self.segment.selectedSegmentIndex == 1) {
         cls = NSClassFromString(@"ViewController2");
     }
-    [[NotActionCenter defaultCenter] pushNotActionAtOnce:YN toClass:cls key:key actionName:name object:param];
+    [[NotActionCenter defaultCenter] pushActionAtOnce:YN toClass:cls key:key actionName:name object:param];
 }
 
 
