@@ -11,9 +11,9 @@
 
 @interface NotActionCenter : NSObject
 
--(void)pushNotActionAtOnce:(BOOL)atOnce toClass:(Class)cls key:(NSString*)key actionName:(NSString*)actionName object:(id)object;
+-(void)pushNotActionAtOnce:(BOOL)atOnce toClass:(Class<NotActionNodeProtocol>)cls key:(NSString*)key actionName:(NSString*)actionName object:(id)object;
 
--(void)pushNotActionAtOnce:(BOOL)atOnce toClass:(Class)cls actionName:(NSString*)actionName object:(id)object;
+-(void)pushNotActionAtOnce:(BOOL)atOnce toClass:(Class<NotActionNodeProtocol>)cls actionName:(NSString*)actionName object:(id)object;
 
 -(void)pushNotActionAtOnce:(BOOL)atOnce actionName:(NSString*)actionName object:(id)object;
 

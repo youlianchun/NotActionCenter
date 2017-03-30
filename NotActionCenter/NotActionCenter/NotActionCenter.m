@@ -18,7 +18,7 @@ typedef NSMutableDictionary<NSString*, NotActionNodeDict_Key *>  NotActionNodeDi
 @end
 
 @interface NotActionNode ()
-@property (nonatomic, copy) NSString *class;
+@property (nonatomic, copy) NSString *cls;
 @property (nonatomic, copy) NSString *key;
 @property (nonatomic, copy) NSString *nodeObjectKey;//nodeObject.nodeKey
 @property (nonatomic, weak) id<NotActionNodeProtocol> nodeObject;
@@ -98,26 +98,36 @@ static NotActionCenter* _kDefaultCenter;
 -(void)pushNotActionAtOnce:(BOOL)atOnce toClass:(Class)cls key:(NSString*)key actionName:(NSString*)actionName object:(id)object {
     if (cls == nil) {
         [self pushNotActionAtOnce:atOnce actionName:actionName object:object];
-    }else if (key.length == 0){
-        [self pushNotActionAtOnce:atOnce toClass:cls actionName:actionName object:object];
-    }else{
-        [NotActionCenter actionQueuSyncDo:^{
-            NSString* class = NSStringFromClass([cls class]);
-            NSMutableDictionary *dict0 = [_notActionNodeDict_map objectForKey:class];
-            NSMutableDictionary *dict1 = [dict0 objectForKey:key];
-            NSArray *arr = [dict1 allValues];
-            for (NotActionNode *notActionNode in arr) {
-                if (notActionNode.isLive) {
-                    [notActionNode receiveActionWithName:actionName object:object transmitAtOnce:atOnce];
-                }else{
-                    [self unMountWithActionNode:notActionNode];
+    }else {
+        if (![cls conformsToProtocol:@protocol(NotActionNodeProtocol)]) {
+            NSString *error = [NSString stringWithFormat:@"⚠️ toClass: %@ 未继承NotActionNodeProtocol协议", NSStringFromClass(cls)];
+            NSAssert(false, error);
+        }
+        if (key.length == 0){
+            [self pushNotActionAtOnce:atOnce toClass:cls actionName:actionName object:object];
+        }else{
+            [NotActionCenter actionQueuSyncDo:^{
+                NSString* class = NSStringFromClass([cls class]);
+                NSMutableDictionary *dict0 = [_notActionNodeDict_map objectForKey:class];
+                NSMutableDictionary *dict1 = [dict0 objectForKey:key];
+                NSArray *arr = [dict1 allValues];
+                for (NotActionNode *notActionNode in arr) {
+                    if (notActionNode.isLive) {
+                        [notActionNode receiveActionWithName:actionName object:object transmitAtOnce:atOnce];
+                    }else{
+                        [self unMountWithActionNode:notActionNode];
+                    }
                 }
-            }
-        }];
+            }];
+        }
     }
 }
 
 -(void)pushNotActionAtOnce:(BOOL)atOnce toClass:(Class)cls actionName:(NSString*)actionName object:(id)object {
+    if (![cls conformsToProtocol:@protocol(NotActionNodeProtocol)]) {
+        NSString *error = [NSString stringWithFormat:@"⚠️ toClass: %@ 未继承NotActionNodeProtocol协议", NSStringFromClass(cls)];
+        NSAssert(false, error);
+    }
     [NotActionCenter actionQueuSyncDo:^{
         NSString* class = NSStringFromClass([cls class]);
         NSMutableDictionary *dict0 = [_notActionNodeDict_map objectForKey:class];
@@ -159,7 +169,7 @@ static NotActionCenter* _kDefaultCenter;
 }
 
 -(void)unMountWithActionNode:(NotActionNode*)notActionNode {
-    NSString *class = notActionNode.class;
+    NSString *class = notActionNode.cls;
     NSString *key = notActionNode.key;
     NSString *nodeKey = notActionNode.nodeObjectKey;
     NSMutableDictionary *dict0 = [_notActionNodeDict_map objectForKey:class];
@@ -196,7 +206,7 @@ static NotActionCenter* _kDefaultCenter;
         [dict0 setObject:dict1 forKey:key];
     }
     NotActionNode *notActionNode = [[NotActionNode alloc] init];
-    notActionNode.class = class;
+    notActionNode.cls = class;
     notActionNode.key = key;
     notActionNode.nodeObjectKey = nodeKey;
     notActionNode.nodeObject = node;

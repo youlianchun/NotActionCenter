@@ -13,7 +13,7 @@
 @end
 
 @interface NotActionNode ()
-@property (nonatomic, copy) NSString *class;
+@property (nonatomic, copy) NSString *cls;
 @property (nonatomic, copy) NSString *key;
 @property (nonatomic, copy) NSString *nodeObjectKey;//nodeObject.nodeKey
 @property (nonatomic, weak) NSObject<NotActionNodeProtocol> * nodeObject;
