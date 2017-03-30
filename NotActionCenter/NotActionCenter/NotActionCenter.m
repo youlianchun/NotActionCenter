@@ -24,14 +24,13 @@ typedef NSMutableDictionary<NSString*/*对象类*/,
 @property (nonatomic, copy) NSString *key;
 @property (nonatomic, copy) NSString *nodeObjectKey;//nodeObject.nodeKey
 @property (nonatomic, weak) id<NotActionNodeProtocol> nodeObject;
-@property (nonatomic, readonly) BOOL manualTrigger;//手动触发通知, 默认NO,
 @property (nonatomic, readonly) BOOL isLive;//是否活跃(对象存在且挂载中)
 -(void)transmitAction;
 -(void)receiveActionWithName:(NSString*)actionName object:(id)object transmitAtOnce:(BOOL)atOnce;
 @end
 
 @interface NotActionCenter ()
-@property (nonatomic, retain) NotActionNodeKeyDict *notActionNodeKeyDict;//用于手动转发
+@property (nonatomic, retain) NotActionNodeKeyDict *notActionNodeKeyDict;
 @property (nonatomic, retain) NotActionNodeDict *notActionNodeDict;
 @end
 
@@ -73,7 +72,6 @@ static NotActionCenter* _kDefaultCenter;
     }
     return self;
 }
-
 
 /**
  同步执行代码块
@@ -130,6 +128,7 @@ static NotActionCenter* _kDefaultCenter;
         }];
     }
 }
+
 -(void)pushNotActionAtOnce:(BOOL)atOnce toClass:(Class)cls actionName:(NSString*)actionName object:(id)object {
     [NotActionCenter actionQueuSyncDo:^{
         NSString* class = NSStringFromClass([cls class]);
@@ -221,9 +220,9 @@ static NotActionCenter* _kDefaultCenter;
     NSString* nodeKey = node.nodeKey;
     NotActionNode *notActionNode = self.notActionNodeKeyDict[nodeKey];
     if (notActionNode.isLive) {
-        if ([notActionNode.nodeObjectKey isEqual:nodeKey]) {
-            [notActionNode transmitAction];
-        }
+        [notActionNode transmitAction];
+    }else {
+        [self unMountWithActionNode:notActionNode];
     }
 }
 
