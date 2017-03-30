@@ -30,6 +30,7 @@ typedef NSMutableDictionary<NSString*, NotActionNodeDict_Key *>  NotActionNodeDi
 @interface NotActionCenter ()
 @property (nonatomic, retain) NotActionNodeDict_NodeKey *notActionNodeDict_node;
 @property (nonatomic, retain) NotActionNodeDict_Class *notActionNodeDict_map;
+@property (nonatomic, assign) BOOL unLiveClearing;
 @end
 
 @implementation NotActionCenter
@@ -58,17 +59,6 @@ static NotActionCenter* _kDefaultCenter;
 
 - (id)mutableCopyWithZone:(NSZone *)zone {
     return _kDefaultCenter;
-}
-
--(instancetype)init {
-    self = [super init];
-    if (self) {
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
-            [self unLiveClear];
-        });
-    }
-    return self;
 }
 
 /**
@@ -212,6 +202,7 @@ static NotActionCenter* _kDefaultCenter;
     notActionNode.nodeObject = node;
     [dict1 setObject:notActionNode forKey:nodeKey];
     [self.notActionNodeDict_node setObject:notActionNode forKey:nodeKey];
+    [self unLiveClear_start];
 }
 
 -(void)manualTriggerWithNode:(NSObject<NotActionNodeProtocol>*)node {
@@ -224,7 +215,24 @@ static NotActionCenter* _kDefaultCenter;
     }
 }
 
--(void)unLiveClear {
+-(void)unLiveClear_start {
+    if (!self.unLiveClearing) {
+        [self unLiveClear_next];
+    }
+}
+
+-(void)unLiveClear_next {
+    if([_notActionNodeDict_node allValues].count>0){
+        self.unLiveClearing = YES;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self unLiveClear_do];
+        });
+    }else{
+        self.unLiveClearing = NO;
+    }
+}
+
+-(void)unLiveClear_do {
     [NotActionCenter actionQueuSyncDo:^{
         NSArray * arr = [_notActionNodeDict_node allValues];
         for (NotActionNode *notActionNode in arr) {
@@ -232,9 +240,7 @@ static NotActionCenter* _kDefaultCenter;
                 [self unMountWithActionNode:notActionNode];
             }
         }
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self unLiveClear];
-        });
+        [self unLiveClear_next];
     }];
 }
 
