@@ -117,11 +117,7 @@ static NotActionCenter* _kDefaultCenter;
                 NotActionNodeDict_NodeKey *dict1 = [dict0 objectForKey:key];
                 NSArray *arr = [dict1 allValues];
                 for (NotActionNode *notActionNode in arr) {
-                    if (notActionNode.isLive) {
-                        [notActionNode receiveActionWithName:actionName object:object transmitAtOnce:atOnce];
-                    }else{
-                        [self unMountWithActionNode:notActionNode];
-                    }
+                    [self transmitActionToNode:notActionNode atOnce:atOnce actionName:actionName object:object];
                 }
             }];
         }
@@ -141,38 +137,44 @@ static NotActionCenter* _kDefaultCenter;
         for (NotActionNodeDict_NodeKey *dict1 in arr) {
             NSArray *arr = [dict1 allValues];
             for (NotActionNode *notActionNode in arr) {
-                if (notActionNode.isLive) {
-                    [notActionNode receiveActionWithName:actionName object:object transmitAtOnce:atOnce];
-                }else{
-                    [self unMountWithActionNode:notActionNode];
-                }
+                [self transmitActionToNode:notActionNode atOnce:atOnce actionName:actionName object:object];
             }
         }
     }];
+}
+
+-(void)pushActionAtOnce:(BOOL)atOnce toNotActionNode:(NSObject<NotActionNodeProtocol>*)node actionName:(NSString*)actionName object:(id)object {
+    [NotActionCenter actionQueuSyncDo:^{
+        NSString* nodeKey = node.nodeKey;
+        NotActionNode *notActionNode = [_notActionNodeDict_node objectForKey:nodeKey];
+        [self transmitActionToNode:notActionNode atOnce:atOnce actionName:actionName object:object];
+    }];
+
 }
 
 -(void)pushActionAtOnce:(BOOL)atOnce actionName:(NSString*)actionName object:(id)object {
     [NotActionCenter actionQueuSyncDo:^{
         NSArray *arr = [_notActionNodeDict_node allValues];
         for (NotActionNode *notActionNode in arr) {
-            if (notActionNode.isLive) {
-                [notActionNode receiveActionWithName:actionName object:object transmitAtOnce:atOnce];
-            }else{
-                [self unMountWithActionNode:notActionNode];
-            }
+            [self transmitActionToNode:notActionNode atOnce:atOnce actionName:actionName object:object];
         }
     }];
+}
+
+-(void)transmitActionToNode:(NotActionNode*)notActionNode atOnce:(BOOL)atOnce actionName:(NSString*)actionName object:(id)object {
+    if (notActionNode.isLive) {
+        [notActionNode receiveActionWithName:actionName object:object transmitAtOnce:atOnce];
+    }else{
+        [self unMountWithActionNode:notActionNode];
+    }
 }
 
 #pragma mark- unMount
 
 -(void)unMountWithNode:(NSObject<NotActionNodeProtocol>*)node {
     NSString* nodeKey = node.nodeKey;
-    NSString* key = [_notActionNodeDict_node objectForKey:nodeKey].key;
-    if (key) {
-        NotActionNode *notActionNode = [_notActionNodeDict_node objectForKey:nodeKey];
-        [self unMountWithActionNode:notActionNode];
-    }
+    NotActionNode *notActionNode = [_notActionNodeDict_node objectForKey:nodeKey];
+    [self unMountWithActionNode:notActionNode];
 }
 
 -(void)unMountWithActionNode:(NotActionNode*)notActionNode {

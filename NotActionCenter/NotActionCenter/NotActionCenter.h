@@ -35,6 +35,17 @@
 -(void)pushActionAtOnce:(BOOL)atOnce toClass:(Class<NotActionNodeProtocol>)cls actionName:(NSString*)actionName object:(id)object;
 
 /**
+ 单播事件
+ atOnce NO时同名事件近保留最新一个
+
+ @param atOnce YES 立刻执行，NO 时目标对象执行 manualTriggerNotAction触发
+ @param node 目标节点
+ @param actionName 事件名
+ @param object 参数
+ */
+-(void)pushActionAtOnce:(BOOL)atOnce toNotActionNode:(NSObject<NotActionNodeProtocol>*)node actionName:(NSString*)actionName object:(id)object;
+
+/**
  广播事件
  atOnce NO时同名事件近保留最新一个
 
