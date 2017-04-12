@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A90F52C61E9E113D002C9345 /* NotActionCenter+Class.m in Sources */ = {isa = PBXBuildFile; fileRef = A90F52C51E9E113D002C9345 /* NotActionCenter+Class.m */; };
 		A96F118B1E8A548400D36DFF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A96F118A1E8A548400D36DFF /* main.m */; };
 		A96F118E1E8A548400D36DFF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A96F118D1E8A548400D36DFF /* AppDelegate.m */; };
 		A96F11911E8A548400D36DFF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A96F11901E8A548400D36DFF /* ViewController.m */; };
@@ -21,6 +22,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A90F52C41E9E113D002C9345 /* NotActionCenter+Class.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NotActionCenter+Class.h"; sourceTree = "<group>"; };
+		A90F52C51E9E113D002C9345 /* NotActionCenter+Class.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NotActionCenter+Class.m"; sourceTree = "<group>"; };
 		A96F11861E8A548400D36DFF /* NotActionCenter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NotActionCenter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A96F118A1E8A548400D36DFF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		A96F118C1E8A548400D36DFF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -106,6 +109,8 @@
 				A96F11A81E8A626400D36DFF /* NSObject+NotAction.m */,
 				A96F11A11E8A54A000D36DFF /* NotActionCenter.h */,
 				A96F11A21E8A54A000D36DFF /* NotActionCenter.m */,
+				A90F52C41E9E113D002C9345 /* NotActionCenter+Class.h */,
+				A90F52C51E9E113D002C9345 /* NotActionCenter+Class.m */,
 				A96F11A41E8A552500D36DFF /* NotActionNode.h */,
 				A96F11A51E8A552500D36DFF /* NotActionNode.m */,
 			);
@@ -191,6 +196,7 @@
 				A9C390DA1E8BA15800B98AE7 /* ViewController2.m in Sources */,
 				A9C390DD1E8BA2F500B98AE7 /* SendViewController.m in Sources */,
 				A96F118E1E8A548400D36DFF /* AppDelegate.m in Sources */,
+				A90F52C61E9E113D002C9345 /* NotActionCenter+Class.m in Sources */,
 				A96F118B1E8A548400D36DFF /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

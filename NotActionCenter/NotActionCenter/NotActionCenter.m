@@ -106,6 +106,7 @@ static NotActionCenter* _kDefaultCenter;
         if (![cls conformsToProtocol:@protocol(NotActionNodeProtocol)]) {
             NSString *error = [NSString stringWithFormat:@"⚠️ toClass: %@ 未继承NotActionNodeProtocol协议", NSStringFromClass(cls)];
             NSAssert(false, error);
+            return;
         }
         if (key.length == 0){
             [self pushActionAtOnce:atOnce toClass:cls actionName:actionName object:object];
@@ -131,6 +132,7 @@ static NotActionCenter* _kDefaultCenter;
     if (![cls conformsToProtocol:@protocol(NotActionNodeProtocol)]) {
         NSString *error = [NSString stringWithFormat:@"⚠️ toClass: %@ 未继承NotActionNodeProtocol协议", NSStringFromClass(cls)];
         NSAssert(false, error);
+        return;
     }
     [NotActionCenter actionQueuSyncDo:^{
         NSString* class = NSStringFromClass([cls class]);
