@@ -58,7 +58,11 @@
 -(void)receiveActionWithName:(NSString*)actionName object:(id)object transmitAtOnce:(BOOL)atOnce {
     [self.actionNameArray_allWillDo removeObject:actionName];
     [self.actionDict_allWillDo removeObjectForKey:actionName];
-    if (atOnce) {
+    BOOL atOnceInManual = NO;
+    if ([self.nodeObject respondsToSelector:@selector(notActionTriggerNotActionAtOnceInManual)]) {
+        atOnceInManual = [self.nodeObject notActionTriggerNotActionAtOnceInManual];
+    }
+    if (atOnce || atOnceInManual) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self transmitActionWithName:actionName object:object];
         });
