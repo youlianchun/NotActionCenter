@@ -10,7 +10,8 @@
 
 NSString* const kNotActionCenter_UnMount = @"kNotActionCenter_UnMount";
 
-@interface NSObject ()<NotActionCenterFunction>
+
+@interface NSObject ()
 @property (nonatomic, readonly)BOOL isMountNotAction;
 @end
 
