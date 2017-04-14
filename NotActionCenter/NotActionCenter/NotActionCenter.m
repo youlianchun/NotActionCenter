@@ -184,19 +184,21 @@ static NotActionCenter* _kDefaultCenter;
 }
 
 -(void)unMountWithActionNode:(NotActionNode*)notActionNode {
-    NSString *class = notActionNode.cls;
-    NSString *key = notActionNode.key;
-    NSString *nodeKey = notActionNode.nodeObjectKey;
-    NotActionNodeDict_Key *dict0 = [_notActionNodeDict_map objectForKey:class];
-    NotActionNodeDict_NodeKey *dict1 = [dict0 objectForKey:key];
-    [dict1 removeObjectForKey:nodeKey];
-    if (dict1.allKeys.count == 0) {
-        [dict0 removeObjectForKey:key];
+    if (notActionNode) {
+        NSString *class = notActionNode.cls;
+        NSString *key = notActionNode.key;
+        NSString *nodeKey = notActionNode.nodeObjectKey;
+        NotActionNodeDict_Key *dict0 = [_notActionNodeDict_map objectForKey:class];
+        NotActionNodeDict_NodeKey *dict1 = [dict0 objectForKey:key];
+        [dict1 removeObjectForKey:nodeKey];
+        if (dict1.allKeys.count == 0) {
+            [dict0 removeObjectForKey:key];
+        }
+        if (dict0.allKeys.count == 0) {
+            [_notActionNodeDict_map removeObjectForKey:class];
+        }
+        [_notActionNodeDict_node removeObjectForKey:nodeKey];
     }
-    if (dict0.allKeys.count == 0) {
-        [_notActionNodeDict_map removeObjectForKey:class];
-    }
-    [_notActionNodeDict_node removeObjectForKey:nodeKey];
 }
 
 #pragma mark- mount
