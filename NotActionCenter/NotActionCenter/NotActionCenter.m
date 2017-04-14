@@ -139,7 +139,6 @@ static NotActionCenter* _kDefaultCenter;
     }];
 }
 
-
 -(void)pushActionAtOnce:(BOOL)atOnce toNotActionNode:(NSObject<NotActionNodeProtocol>*)node actionName:(NSString*)actionName object:(id)object {
     [NotActionCenter actionQueuSyncDo:^{
         NSString* nodeKey = node.nodeKey;
@@ -157,7 +156,6 @@ static NotActionCenter* _kDefaultCenter;
     }
 }
 
-
 -(void)transmitActionToNode:(NotActionNode*)notActionNode atOnce:(BOOL)atOnce actionName:(NSString*)actionName object:(id)object {
     if (notActionNode) {
         if (notActionNode.isLive) {
@@ -167,7 +165,6 @@ static NotActionCenter* _kDefaultCenter;
         }
     }
 }
-
 
 -(void)manualTriggerWithNode:(NSObject<NotActionNodeProtocol>*)node {
     NSString* nodeKey = node.nodeKey;
@@ -246,7 +243,6 @@ static NotActionCenter* _kDefaultCenter;
     }
     [dict1 setObject:notActionNode forKey:nodeKey];
     
-    
     dict1 = [_notActionNodeDict_key objectForKey:key];
     if (!dict1) {
         dict1 = [NotActionNodeDict_NodeKey dictionary];
@@ -257,8 +253,6 @@ static NotActionCenter* _kDefaultCenter;
     [self.notActionNodeDict_nodeKey setObject:notActionNode forKey:nodeKey];
     [self unLiveClear_start];
 }
-
-
 
 #pragma mark- unLiveClear
 
@@ -292,7 +286,6 @@ static NotActionCenter* _kDefaultCenter;
 }
 
 @end
-
 
 
 #pragma mark - 
