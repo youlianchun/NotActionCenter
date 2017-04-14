@@ -34,7 +34,16 @@ static NSString* kNotActionCenter_unMount = @"kNotActionCenter_unMount";
 @end
 
 @protocol NotActionNodeProtocol <NotActionCenterFunction>
+
+/**
+ 事件触发函数
+
+ @param actionName 事件名
+ @param object 参数
+ */
 -(void)notActionWithName:(NSString*)actionName object:(id)object;
+
+@optional
 /**
  YES 时候原本手动执行代码将自动执行，收到事件时候会进行检测
  
