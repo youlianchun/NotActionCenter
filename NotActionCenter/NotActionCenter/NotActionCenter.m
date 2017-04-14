@@ -28,8 +28,9 @@ typedef NSMutableDictionary<NSString*, NotActionNodeDict_Key *>  NotActionNodeDi
 @end
 
 @interface NotActionCenter ()
-@property (nonatomic, retain) NotActionNodeDict_NodeKey *notActionNodeDict_node;
-@property (nonatomic, retain) NotActionNodeDict_Class *notActionNodeDict_map;
+@property (nonatomic, retain) NotActionNodeDict_NodeKey *notActionNodeDict_nodeKey;
+@property (nonatomic, retain) NotActionNodeDict_Key *notActionNodeDict_key;
+@property (nonatomic, retain) NotActionNodeDict_Class *notActionNodeDict_class;
 @property (nonatomic, assign) BOOL unLiveClearing;
 @end
 
@@ -77,31 +78,43 @@ static NotActionCenter* _kDefaultCenter;
 }
 
 -(void)dealloc {
-    _notActionNodeDict_node = nil;
-    _notActionNodeDict_map = nil;
+    _notActionNodeDict_nodeKey = nil;
+    _notActionNodeDict_class = nil;
 }
 
 #pragma mark- GET SET
 
--(NotActionNodeDict_NodeKey *)notActionNodeDict_node {
-    if (!_notActionNodeDict_node) {
-        _notActionNodeDict_node = [NotActionNodeDict_NodeKey dictionary];
+-(NotActionNodeDict_NodeKey *)notActionNodeDict_nodeKey {
+    if (!_notActionNodeDict_nodeKey) {
+        _notActionNodeDict_nodeKey = [NotActionNodeDict_NodeKey dictionary];
     }
-    return _notActionNodeDict_node;
+    return _notActionNodeDict_nodeKey;
 }
 
--(NotActionNodeDict_Class *)notActionNodeDict_map {
-    if (!_notActionNodeDict_map) {
-        _notActionNodeDict_map = [NotActionNodeDict_Class dictionary];
+-(NotActionNodeDict_Key *)notActionNodeDict_key {
+    if (!_notActionNodeDict_key) {
+        _notActionNodeDict_key = [NotActionNodeDict_Key dictionary];
     }
-    return _notActionNodeDict_map;
+    return _notActionNodeDict_key;
+
+}
+
+-(NotActionNodeDict_Class *)notActionNodeDict_class {
+    if (!_notActionNodeDict_class) {
+        _notActionNodeDict_class = [NotActionNodeDict_Class dictionary];
+    }
+    return _notActionNodeDict_class;
 }
 
 #pragma mark- pushNotAction
 
 -(void)pushActionAtOnce:(BOOL)atOnce toClass:(Class)cls key:(NSString*)key actionName:(NSString*)actionName object:(id)object {
     if (cls == nil) {
-        [self pushActionAtOnce:atOnce actionName:actionName object:object];
+        if (key.length == 0) {
+            [self pushActionAtOnce:atOnce actionName:actionName object:object];
+        }else{
+            [self pushActionAtOnce:atOnce toKey:key actionName:actionName object:object];
+        }
     }else {
         if (![cls conformsToProtocol:@protocol(NotActionNodeProtocol)]) {
             NSString *error = [NSString stringWithFormat:@"⚠️ toClass: %@ 未继承NotActionNodeProtocol协议", NSStringFromClass(cls)];
@@ -113,7 +126,7 @@ static NotActionCenter* _kDefaultCenter;
         }else{
             [NotActionCenter actionQueuSyncDo:^{
                 NSString* class = NSStringFromClass([cls class]);
-                NotActionNodeDict_Key *dict0 = [_notActionNodeDict_map objectForKey:class];
+                NotActionNodeDict_Key *dict0 = [_notActionNodeDict_class objectForKey:class];
                 NotActionNodeDict_NodeKey *dict1 = [dict0 objectForKey:key];
                 NSArray *arr = [dict1 allValues];
                 for (NotActionNode *notActionNode in arr) {
@@ -135,7 +148,7 @@ static NotActionCenter* _kDefaultCenter;
         }
         [NotActionCenter actionQueuSyncDo:^{
             NSString* class = NSStringFromClass([cls class]);
-            NotActionNodeDict_Key *dict0 = [_notActionNodeDict_map objectForKey:class];
+            NotActionNodeDict_Key *dict0 = [_notActionNodeDict_class objectForKey:class];
             NSArray *arr = [dict0 allValues];
             for (NotActionNodeDict_NodeKey *dict1 in arr) {
                 NSArray *arr = [dict1 allValues];
@@ -147,10 +160,20 @@ static NotActionCenter* _kDefaultCenter;
     }
 }
 
+-(void)pushActionAtOnce:(BOOL)atOnce toKey:(NSString*)key actionName:(NSString*)actionName object:(id)object {
+    [NotActionCenter actionQueuSyncDo:^{
+        NotActionNodeDict_NodeKey *dict1 = [_notActionNodeDict_key objectForKey:key];
+        NSArray *arr = [dict1 allValues];
+        for (NotActionNode *notActionNode in arr) {
+            [self transmitActionToNode:notActionNode atOnce:atOnce actionName:actionName object:object];
+        }
+    }];
+}
+
 -(void)pushActionAtOnce:(BOOL)atOnce toNotActionNode:(NSObject<NotActionNodeProtocol>*)node actionName:(NSString*)actionName object:(id)object {
     [NotActionCenter actionQueuSyncDo:^{
         NSString* nodeKey = node.nodeKey;
-        NotActionNode *notActionNode = [_notActionNodeDict_node objectForKey:nodeKey];
+        NotActionNode *notActionNode = [_notActionNodeDict_nodeKey objectForKey:nodeKey];
         [self transmitActionToNode:notActionNode atOnce:atOnce actionName:actionName object:object];
     }];
 
@@ -158,12 +181,14 @@ static NotActionCenter* _kDefaultCenter;
 
 -(void)pushActionAtOnce:(BOOL)atOnce actionName:(NSString*)actionName object:(id)object {
     [NotActionCenter actionQueuSyncDo:^{
-        NSArray *arr = [_notActionNodeDict_node allValues];
+        NSArray *arr = [_notActionNodeDict_nodeKey allValues];
         for (NotActionNode *notActionNode in arr) {
             [self transmitActionToNode:notActionNode atOnce:atOnce actionName:actionName object:object];
         }
     }];
 }
+
+
 
 -(void)transmitActionToNode:(NotActionNode*)notActionNode atOnce:(BOOL)atOnce actionName:(NSString*)actionName object:(id)object {
     if (notActionNode) {
@@ -175,11 +200,24 @@ static NotActionCenter* _kDefaultCenter;
     }
 }
 
+
+-(void)manualTriggerWithNode:(NSObject<NotActionNodeProtocol>*)node {
+    NSString* nodeKey = node.nodeKey;
+    NotActionNode *notActionNode = [self.notActionNodeDict_nodeKey objectForKey:nodeKey];
+    if (notActionNode) {
+        if (notActionNode.isLive) {
+            [notActionNode transmitAction];
+        }else {
+            [self unMountWithActionNode:notActionNode];
+        }
+    }
+}
+
 #pragma mark- unMount
 
 -(void)unMountWithNode:(NSObject<NotActionNodeProtocol>*)node {
     NSString* nodeKey = node.nodeKey;
-    NotActionNode *notActionNode = [_notActionNodeDict_node objectForKey:nodeKey];
+    NotActionNode *notActionNode = [_notActionNodeDict_nodeKey objectForKey:nodeKey];
     [self unMountWithActionNode:notActionNode];
 }
 
@@ -188,16 +226,23 @@ static NotActionCenter* _kDefaultCenter;
         NSString *class = notActionNode.cls;
         NSString *key = notActionNode.key;
         NSString *nodeKey = notActionNode.nodeObjectKey;
-        NotActionNodeDict_Key *dict0 = [_notActionNodeDict_map objectForKey:class];
+        NotActionNodeDict_Key *dict0 = [_notActionNodeDict_class objectForKey:class];
         NotActionNodeDict_NodeKey *dict1 = [dict0 objectForKey:key];
         [dict1 removeObjectForKey:nodeKey];
         if (dict1.allKeys.count == 0) {
             [dict0 removeObjectForKey:key];
         }
         if (dict0.allKeys.count == 0) {
-            [_notActionNodeDict_map removeObjectForKey:class];
+            [_notActionNodeDict_class removeObjectForKey:class];
         }
-        [_notActionNodeDict_node removeObjectForKey:nodeKey];
+        
+        dict1 = [_notActionNodeDict_key objectForKey:key];
+        [dict1 removeObjectForKey:nodeKey];
+        if (dict1.allKeys.count == 0) {
+            [_notActionNodeDict_key removeObjectForKey:key];
+        }
+        
+        [_notActionNodeDict_nodeKey removeObjectForKey:nodeKey];
     }
 }
 
@@ -205,19 +250,19 @@ static NotActionCenter* _kDefaultCenter;
 
 -(void)mountWithNode:(NSObject<NotActionNodeProtocol>*)node key:(NSString*)key {
     NSString* nodeKey = node.nodeKey;
-    NSString* oldKey = [self.notActionNodeDict_node objectForKey:nodeKey].key;
+    NSString* oldKey = [self.notActionNodeDict_nodeKey objectForKey:nodeKey].key;
     if ([oldKey isEqualToString:key]) {
         return;
     }
     NSString* class = NSStringFromClass([node class]);
     if (oldKey) {
-        NotActionNode *notActionNode = [self.notActionNodeDict_node objectForKey:nodeKey];
+        NotActionNode *notActionNode = [self.notActionNodeDict_nodeKey objectForKey:nodeKey];
         [self unMountWithActionNode:notActionNode];
     }
-    NotActionNodeDict_Key *dict0 = [self.notActionNodeDict_map objectForKey:class];
+    NotActionNodeDict_Key *dict0 = [self.notActionNodeDict_class objectForKey:class];
     if (!dict0) {
         dict0 = [NotActionNodeDict_Key dictionary];
-        [self.notActionNodeDict_map setObject:dict0 forKey:class];
+        [self.notActionNodeDict_class setObject:dict0 forKey:class];
     }
     NotActionNodeDict_NodeKey *dict1 = [dict0 objectForKey:key];
     if (!dict1) {
@@ -230,21 +275,19 @@ static NotActionCenter* _kDefaultCenter;
     notActionNode.nodeObjectKey = nodeKey;
     notActionNode.nodeObject = node;
     [dict1 setObject:notActionNode forKey:nodeKey];
-    [self.notActionNodeDict_node setObject:notActionNode forKey:nodeKey];
+    
+    dict1 = [_notActionNodeDict_key objectForKey:key];
+    if (!dict1) {
+        dict1 = [NotActionNodeDict_NodeKey dictionary];
+        [_notActionNodeDict_key setObject:dict1 forKey:key];
+    }
+    [dict1 setObject:notActionNode forKey:nodeKey];
+    
+    [self.notActionNodeDict_nodeKey setObject:notActionNode forKey:nodeKey];
     [self unLiveClear_start];
 }
 
--(void)manualTriggerWithNode:(NSObject<NotActionNodeProtocol>*)node {
-    NSString* nodeKey = node.nodeKey;
-    NotActionNode *notActionNode = self.notActionNodeDict_node[nodeKey];
-    if (notActionNode) {
-        if (notActionNode.isLive) {
-            [notActionNode transmitAction];
-        }else {
-            [self unMountWithActionNode:notActionNode];
-        }
-    }
-}
+
 
 #pragma mark- unLiveClear
 
@@ -255,7 +298,7 @@ static NotActionCenter* _kDefaultCenter;
 }
 
 -(void)unLiveClear_next {
-    if([_notActionNodeDict_node allValues].count>0){
+    if([_notActionNodeDict_nodeKey allValues].count>0){
         self.unLiveClearing = YES;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self unLiveClear_do];
@@ -267,7 +310,7 @@ static NotActionCenter* _kDefaultCenter;
 
 -(void)unLiveClear_do {
     [NotActionCenter actionQueuSyncDo:^{
-        NSArray * arr = [_notActionNodeDict_node allValues];
+        NSArray * arr = [_notActionNodeDict_nodeKey allValues];
         for (NotActionNode *notActionNode in arr) {
             if (notActionNode && !notActionNode.isLive) {
                 [self unMountWithActionNode:notActionNode];

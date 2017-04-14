@@ -34,6 +34,7 @@
  */
 -(void)pushActionAtOnce:(BOOL)atOnce toClass:(Class<NotActionNodeProtocol>)cls actionName:(NSString*)actionName object:(id)object;
 
+-(void)pushActionAtOnce:(BOOL)atOnce toKey:(NSString*)key actionName:(NSString*)actionName object:(id)object;
 /**
  单播事件
  atOnce NO时同名事件近保留最新一个
