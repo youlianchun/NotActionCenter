@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-static NSString* kNotActionCenter_unMount = @"kNotActionCenter_unMount";
+extern NSString* const kNotActionCenter_UnMount;
 
 @protocol NotActionCenterFunction <NSObject>
 @optional

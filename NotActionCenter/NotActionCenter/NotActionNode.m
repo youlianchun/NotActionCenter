@@ -8,6 +8,8 @@
 
 #import "NotActionNode.h"
 
+NSString* const kNotActionCenter_UnMount = @"kNotActionCenter_UnMount";
+
 @interface NSObject ()<NotActionCenterFunction>
 @property (nonatomic, readonly)BOOL isMountNotAction;
 @end
@@ -91,7 +93,7 @@
 }
 
 -(void)transmitActionWithName:(NSString*)actionName object:(id)object {
-    if ([actionName isEqualToString:kNotActionCenter_unMount]) {
+    if ([actionName isEqualToString:kNotActionCenter_UnMount]) {
         [self.nodeObject unMountNotAction];
     }else{
         [self.nodeObject notActionWithName:actionName object:object];
