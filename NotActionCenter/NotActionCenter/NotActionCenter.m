@@ -125,22 +125,26 @@ static NotActionCenter* _kDefaultCenter;
 }
 
 -(void)pushActionAtOnce:(BOOL)atOnce toClass:(Class)cls actionName:(NSString*)actionName object:(id)object {
-    if (![cls conformsToProtocol:@protocol(NotActionNodeProtocol)]) {
-        NSString *error = [NSString stringWithFormat:@"⚠️ toClass: %@ 未继承NotActionNodeProtocol协议", NSStringFromClass(cls)];
-        NSAssert(NO, error);
-        return;
-    }
-    [NotActionCenter actionQueuSyncDo:^{
-        NSString* class = NSStringFromClass([cls class]);
-        NotActionNodeDict_Key *dict0 = [_notActionNodeDict_map objectForKey:class];
-        NSArray *arr = [dict0 allValues];
-        for (NotActionNodeDict_NodeKey *dict1 in arr) {
-            NSArray *arr = [dict1 allValues];
-            for (NotActionNode *notActionNode in arr) {
-                [self transmitActionToNode:notActionNode atOnce:atOnce actionName:actionName object:object];
-            }
+    if (cls == nil) {
+        [self pushActionAtOnce:atOnce actionName:actionName object:object];
+    }else {
+        if (![cls conformsToProtocol:@protocol(NotActionNodeProtocol)]) {
+            NSString *error = [NSString stringWithFormat:@"⚠️ toClass: %@ 未继承NotActionNodeProtocol协议", NSStringFromClass(cls)];
+            NSAssert(NO, error);
+            return;
         }
-    }];
+        [NotActionCenter actionQueuSyncDo:^{
+            NSString* class = NSStringFromClass([cls class]);
+            NotActionNodeDict_Key *dict0 = [_notActionNodeDict_map objectForKey:class];
+            NSArray *arr = [dict0 allValues];
+            for (NotActionNodeDict_NodeKey *dict1 in arr) {
+                NSArray *arr = [dict1 allValues];
+                for (NotActionNode *notActionNode in arr) {
+                    [self transmitActionToNode:notActionNode atOnce:atOnce actionName:actionName object:object];
+                }
+            }
+        }];
+    }
 }
 
 -(void)pushActionAtOnce:(BOOL)atOnce toNotActionNode:(NSObject<NotActionNodeProtocol>*)node actionName:(NSString*)actionName object:(id)object {
