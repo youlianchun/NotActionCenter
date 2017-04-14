@@ -162,10 +162,12 @@ static NotActionCenter* _kDefaultCenter;
 }
 
 -(void)transmitActionToNode:(NotActionNode*)notActionNode atOnce:(BOOL)atOnce actionName:(NSString*)actionName object:(id)object {
-    if (notActionNode.isLive) {
-        [notActionNode receiveActionWithName:actionName object:object transmitAtOnce:atOnce];
-    }else{
-        [self unMountWithActionNode:notActionNode];
+    if (notActionNode) {
+        if (notActionNode.isLive) {
+            [notActionNode receiveActionWithName:actionName object:object transmitAtOnce:atOnce];
+        }else{
+            [self unMountWithActionNode:notActionNode];
+        }
     }
 }
 
@@ -229,10 +231,12 @@ static NotActionCenter* _kDefaultCenter;
 -(void)manualTriggerWithNode:(NSObject<NotActionNodeProtocol>*)node {
     NSString* nodeKey = node.nodeKey;
     NotActionNode *notActionNode = self.notActionNodeDict_node[nodeKey];
-    if (notActionNode.isLive) {
-        [notActionNode transmitAction];
-    }else {
-        [self unMountWithActionNode:notActionNode];
+    if (notActionNode) {
+        if (notActionNode.isLive) {
+            [notActionNode transmitAction];
+        }else {
+            [self unMountWithActionNode:notActionNode];
+        }
     }
 }
 
@@ -259,7 +263,7 @@ static NotActionCenter* _kDefaultCenter;
     [NotActionCenter actionQueuSyncDo:^{
         NSArray * arr = [_notActionNodeDict_node allValues];
         for (NotActionNode *notActionNode in arr) {
-            if (!notActionNode.isLive) {
+            if (notActionNode && !notActionNode.isLive) {
                 [self unMountWithActionNode:notActionNode];
             }
         }
