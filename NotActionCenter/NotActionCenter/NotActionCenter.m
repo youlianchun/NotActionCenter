@@ -119,16 +119,14 @@ static NotActionCenter* _kDefaultCenter;
                 [self transmitActionToNodeDict:dict1 atOnce:atOnce actionName:actionName object:object];
             }
         }else if ([cls conformsToProtocol:@protocol(NotActionNodeProtocol)]) {
+            NSString* class = NSStringFromClass([cls class]);
+            NotActionNodeDict_Key *dict0 = [_notActionNodeDict_class objectForKey:class];
             if (key.length == 0){
-                NSString* class = NSStringFromClass([cls class]);
-                NotActionNodeDict_Key *dict0 = [_notActionNodeDict_class objectForKey:class];
                 NSArray *arr = [dict0 allValues];
                 for (NotActionNodeDict_NodeKey *dict1 in arr) {
                     [self transmitActionToNodeDict:dict1 atOnce:atOnce actionName:actionName object:object];
                 }
             }else{
-                NSString* class = NSStringFromClass([cls class]);
-                NotActionNodeDict_Key *dict0 = [_notActionNodeDict_class objectForKey:class];
                 NotActionNodeDict_NodeKey *dict1 = [dict0 objectForKey:key];
                 [self transmitActionToNodeDict:dict1 atOnce:atOnce actionName:actionName object:object];
             }
