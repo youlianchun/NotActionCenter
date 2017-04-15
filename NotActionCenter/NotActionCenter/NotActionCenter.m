@@ -243,10 +243,10 @@ static NotActionCenter* _kDefaultCenter;
     }
     [dict1 setObject:notActionNode forKey:nodeKey];
     
-    dict1 = [_notActionNodeDict_key objectForKey:key];
+    dict1 = [self.notActionNodeDict_key objectForKey:key];
     if (!dict1) {
         dict1 = [NotActionNodeDict_NodeKey dictionary];
-        [_notActionNodeDict_key setObject:dict1 forKey:key];
+        [self.notActionNodeDict_key setObject:dict1 forKey:key];
     }
     [dict1 setObject:notActionNode forKey:nodeKey];
     
