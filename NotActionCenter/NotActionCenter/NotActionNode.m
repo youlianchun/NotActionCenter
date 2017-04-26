@@ -11,19 +11,13 @@
 NSString* const kNotActionCenter_UnMount = @"kNotActionCenter_UnMount";
 
 
-@interface NSObject ()
-@property (nonatomic, readonly)BOOL isMountNotAction;
-@end
-
 @interface NotActionNode ()
 @property (nonatomic, copy) NSString *cls;
 @property (nonatomic, copy) NSString *key;
-@property (nonatomic, copy) NSString *nodeObjectKey;//nodeObject.nodeKey
+@property (nonatomic, copy) NSString *hashKey;
 @property (nonatomic, weak) NSObject<NotActionNodeProtocol> * nodeObject;
 @property (nonatomic, retain) NSMutableArray <NSString*>*actionNameArray_allWillDo;//按照时间排序
 @property (nonatomic, retain) NSMutableDictionary <NSString *, id>* actionDict_allWillDo;//同名事件近保留最新一个
-@property (nonatomic, readonly) BOOL isLive;//是否活跃(对象存在且挂载中)
-
 @end
 
 @implementation NotActionNode
@@ -47,13 +41,6 @@ NSString* const kNotActionCenter_UnMount = @"kNotActionCenter_UnMount";
         _actionDict_allWillDo = [NSMutableDictionary dictionary];
     }
     return _actionDict_allWillDo;
-}
-
--(BOOL)isLive {
-    if (self.nodeObject) {
-        return self.nodeObject.isMountNotAction;
-    }
-    return NO;
 }
 
 #pragma mark- receiveAction

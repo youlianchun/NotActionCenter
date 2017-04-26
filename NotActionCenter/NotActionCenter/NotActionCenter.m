@@ -9,26 +9,21 @@
 #import "NotActionCenter.h"
 #import "NotActionNode.h"
 
-typedef NSMutableDictionary<NSString*, NotActionNode *> NotActionNodeDict_NodeKey;
-typedef NSMutableDictionary<NSString*, NotActionNodeDict_NodeKey *> NotActionNodeDict_Key;
+typedef NSMutableDictionary<NSString*, NotActionNode *> NotActionNodeDict_Hash;
+typedef NSMutableDictionary<NSString*, NotActionNodeDict_Hash *> NotActionNodeDict_Key;
 typedef NSMutableDictionary<NSString*, NotActionNodeDict_Key *>  NotActionNodeDict_Class;
-
-@interface NSObject ()
-@property (nonatomic, readonly)NSString *nodeKey;
-@end
 
 @interface NotActionNode ()
 @property (nonatomic, copy) NSString *cls;
 @property (nonatomic, copy) NSString *key;
-@property (nonatomic, copy) NSString *nodeObjectKey;//nodeObject.nodeKey
+@property (nonatomic, copy) NSString *hashKey;
 @property (nonatomic, weak) id<NotActionNodeProtocol> nodeObject;
-@property (nonatomic, readonly) BOOL isLive;//是否活跃(对象存在且挂载中)
 -(void)transmitAction;
 -(void)receiveActionWithName:(NSString*)actionName object:(id)object transmitAtOnce:(BOOL)atOnce;
 @end
 
 @interface NotActionCenter ()
-@property (nonatomic, retain) NotActionNodeDict_NodeKey *notActionNodeDict_nodeKey;
+@property (nonatomic, retain) NotActionNodeDict_Hash *notActionNodeDict_hash;
 @property (nonatomic, retain) NotActionNodeDict_Key *notActionNodeDict_key;
 @property (nonatomic, retain) NotActionNodeDict_Class *notActionNodeDict_class;
 @property (nonatomic, assign) BOOL unLiveClearing;
@@ -78,18 +73,18 @@ static NotActionCenter* _kDefaultCenter;
 }
 
 -(void)dealloc {
-    _notActionNodeDict_nodeKey = nil;
+    _notActionNodeDict_hash = nil;
     _notActionNodeDict_key = nil;
     _notActionNodeDict_class = nil;
 }
 
 #pragma mark- GET SET
 
--(NotActionNodeDict_NodeKey *)notActionNodeDict_nodeKey {
-    if (!_notActionNodeDict_nodeKey) {
-        _notActionNodeDict_nodeKey = [NotActionNodeDict_NodeKey dictionary];
+-(NotActionNodeDict_Hash *)notActionNodeDict_hash {
+    if (!_notActionNodeDict_hash) {
+        _notActionNodeDict_hash = [NotActionNodeDict_Hash dictionary];
     }
-    return _notActionNodeDict_nodeKey;
+    return _notActionNodeDict_hash;
 }
 
 -(NotActionNodeDict_Key *)notActionNodeDict_key {
@@ -111,24 +106,25 @@ static NotActionCenter* _kDefaultCenter;
 
 -(void)pushActionAtOnce:(BOOL)atOnce toClass:(Class)cls key:(NSString*)key actionName:(NSString*)actionName object:(id)object {
     [NotActionCenter actionQueuSyncDo:^{
+        NSString *_actionName = actionName?actionName:@"";
         if (cls == nil) {
             if (key.length == 0) {
-                [self transmitActionToNodeDict:_notActionNodeDict_nodeKey atOnce:atOnce actionName:actionName object:object];
+                [self _transmitActionToNodeDict:_notActionNodeDict_hash atOnce:atOnce actionName:_actionName object:object];
             }else{
-                NotActionNodeDict_NodeKey *dict1 = [_notActionNodeDict_key objectForKey:key];
-                [self transmitActionToNodeDict:dict1 atOnce:atOnce actionName:actionName object:object];
+                NotActionNodeDict_Hash *dict1 = [_notActionNodeDict_key objectForKey:key];
+                [self _transmitActionToNodeDict:dict1 atOnce:atOnce actionName:_actionName object:object];
             }
         }else if ([cls conformsToProtocol:@protocol(NotActionNodeProtocol)]) {
             NSString* class = NSStringFromClass([cls class]);
             NotActionNodeDict_Key *dict0 = [_notActionNodeDict_class objectForKey:class];
             if (key.length == 0){
                 NSArray *arr = [dict0 allValues];
-                for (NotActionNodeDict_NodeKey *dict1 in arr) {
-                    [self transmitActionToNodeDict:dict1 atOnce:atOnce actionName:actionName object:object];
+                for (NotActionNodeDict_Hash *dict1 in arr) {
+                    [self _transmitActionToNodeDict:dict1 atOnce:atOnce actionName:_actionName object:object];
                 }
             }else{
-                NotActionNodeDict_NodeKey *dict1 = [dict0 objectForKey:key];
-                [self transmitActionToNodeDict:dict1 atOnce:atOnce actionName:actionName object:object];
+                NotActionNodeDict_Hash *dict1 = [dict0 objectForKey:key];
+                [self _transmitActionToNodeDict:dict1 atOnce:atOnce actionName:_actionName object:object];
             }
         }else{
             NSString *error = [NSString stringWithFormat:@"⚠️ toClass: %@ 未继承NotActionNodeProtocol协议", NSStringFromClass(cls)];
@@ -139,24 +135,40 @@ static NotActionCenter* _kDefaultCenter;
 
 -(void)pushActionAtOnce:(BOOL)atOnce toNotActionNode:(NSObject<NotActionNodeProtocol>*)node actionName:(NSString*)actionName object:(id)object {
     [NotActionCenter actionQueuSyncDo:^{
-        NSString* nodeKey = node.nodeKey;
-        NotActionNode *notActionNode = [_notActionNodeDict_nodeKey objectForKey:nodeKey];
-        [self transmitActionToNode:notActionNode atOnce:atOnce actionName:actionName object:object];
+        NSString *_actionName = actionName?actionName:@"";
+        NSString* hashKey = [NSString stringWithFormat:@"%ld", node.hash];
+        NotActionNode *notActionNode = [_notActionNodeDict_hash objectForKey:hashKey];
+        [self _transmitActionToNode:notActionNode atOnce:atOnce actionName:_actionName object:object];
+    }];
+}
+
+
+-(void)manualTriggerWithNode:(NSObject<NotActionNodeProtocol>*)node {
+    [NotActionCenter actionQueuSyncDo:^{
+        NSString* hashKey = [NSString stringWithFormat:@"%ld", node.hash];
+        NotActionNode *notActionNode = [_notActionNodeDict_hash objectForKey:hashKey];
+        if (notActionNode) {
+            if ([self isLiveCheck:notActionNode]) {
+                [notActionNode transmitAction];
+            }else {
+                [self _unMountWithActionNode:notActionNode];
+            }
+        }
     }];
 }
 
 #pragma mark --
 
--(void)transmitActionToNodeDict:(NotActionNodeDict_NodeKey*)dict atOnce:(BOOL)atOnce actionName:(NSString*)actionName object:(id)object {
+-(void)_transmitActionToNodeDict:(NotActionNodeDict_Hash*)dict atOnce:(BOOL)atOnce actionName:(NSString*)actionName object:(id)object {
     NSArray *arr = [dict allValues];
     for (NotActionNode *notActionNode in arr) {
-        [self transmitActionToNode:notActionNode atOnce:atOnce actionName:actionName object:object];
+        [self _transmitActionToNode:notActionNode atOnce:atOnce actionName:actionName object:object];
     }
 }
 
--(void)transmitActionToNode:(NotActionNode*)notActionNode atOnce:(BOOL)atOnce actionName:(NSString*)actionName object:(id)object {
+-(void)_transmitActionToNode:(NotActionNode*)notActionNode atOnce:(BOOL)atOnce actionName:(NSString*)actionName object:(id)object {
     if (notActionNode) {
-        if (notActionNode.isLive) {
+        if ([self isLiveCheck:notActionNode]) {
             [notActionNode receiveActionWithName:actionName object:object transmitAtOnce:atOnce];
         }else{
             [self unMountWithActionNode:notActionNode];
@@ -164,34 +176,36 @@ static NotActionCenter* _kDefaultCenter;
     }
 }
 
--(void)manualTriggerWithNode:(NSObject<NotActionNodeProtocol>*)node {
-    NSString* nodeKey = node.nodeKey;
-    NotActionNode *notActionNode = [self.notActionNodeDict_nodeKey objectForKey:nodeKey];
-    if (notActionNode) {
-        if (notActionNode.isLive) {
-            [notActionNode transmitAction];
-        }else {
-            [self unMountWithActionNode:notActionNode];
-        }
-    }
-}
 
 #pragma mark- unMount
 
 -(void)unMountWithNode:(NSObject<NotActionNodeProtocol>*)node {
-    NSString* nodeKey = node.nodeKey;
-    NotActionNode *notActionNode = [_notActionNodeDict_nodeKey objectForKey:nodeKey];
-    [self unMountWithActionNode:notActionNode];
+    [NotActionCenter actionQueuSyncDo:^{
+        NSString* hashKey = [NSString stringWithFormat:@"%ld", node.hash];
+        NotActionNode *notActionNode = [_notActionNodeDict_hash objectForKey:hashKey];
+        [self _unMountWithActionNode:notActionNode];
+    }];
 }
 
 -(void)unMountWithActionNode:(NotActionNode*)notActionNode {
     if (notActionNode) {
+        [NotActionCenter actionQueuSyncDo:^{
+            [self _unMountWithActionNode:notActionNode];
+        }];
+    }
+}
+
+#pragma mark --
+
+-(void)_unMountWithActionNode:(NotActionNode*)notActionNode {
+    NSString *hashKey = notActionNode.hashKey;
+    if ([_notActionNodeDict_hash objectForKey:hashKey]) {
         NSString *class = notActionNode.cls;
         NSString *key = notActionNode.key;
-        NSString *nodeKey = notActionNode.nodeObjectKey;
+        
         NotActionNodeDict_Key *dict0 = [_notActionNodeDict_class objectForKey:class];
-        NotActionNodeDict_NodeKey *dict1 = [dict0 objectForKey:key];
-        [dict1 removeObjectForKey:nodeKey];
+        NotActionNodeDict_Hash *dict1 = [dict0 objectForKey:key];
+        [dict1 removeObjectForKey:hashKey];
         if (dict1.allKeys.count == 0) {
             [dict0 removeObjectForKey:key];
         }
@@ -200,56 +214,65 @@ static NotActionCenter* _kDefaultCenter;
         }
         
         dict1 = [_notActionNodeDict_key objectForKey:key];
-        [dict1 removeObjectForKey:nodeKey];
+        [dict1 removeObjectForKey:hashKey];
         if (dict1.allKeys.count == 0) {
             [_notActionNodeDict_key removeObjectForKey:key];
         }
         
-        [_notActionNodeDict_nodeKey removeObjectForKey:nodeKey];
+        [_notActionNodeDict_hash removeObjectForKey:hashKey];
     }
 }
 
 #pragma mark- mount
 
+
+
 -(void)mountWithNode:(NSObject<NotActionNodeProtocol>*)node key:(NSString*)key {
-    NSString* nodeKey = node.nodeKey;
-    NSString* oldKey = [self.notActionNodeDict_nodeKey objectForKey:nodeKey].key;
-    if ([oldKey isEqualToString:key]) {
-        return;
-    }
-    NSString* class = NSStringFromClass([node class]);
-    if (oldKey) {
-        NotActionNode *notActionNode = [self.notActionNodeDict_nodeKey objectForKey:nodeKey];
-        [self unMountWithActionNode:notActionNode];
-    }
-    NotActionNode *notActionNode = [[NotActionNode alloc] init];
-    notActionNode.cls = class;
-    notActionNode.key = key;
-    notActionNode.nodeObjectKey = nodeKey;
-    notActionNode.nodeObject = node;
-    
-    NotActionNodeDict_Key *dict0 = [self.notActionNodeDict_class objectForKey:class];
-    if (!dict0) {
-        dict0 = [NotActionNodeDict_Key dictionary];
-        [self.notActionNodeDict_class setObject:dict0 forKey:class];
-    }
-    
-    NotActionNodeDict_NodeKey *dict1 = [dict0 objectForKey:key];
-    if (!dict1) {
-        dict1 = [NotActionNodeDict_NodeKey dictionary];
-        [dict0 setObject:dict1 forKey:key];
-    }
-    [dict1 setObject:notActionNode forKey:nodeKey];
-    
-    dict1 = [self.notActionNodeDict_key objectForKey:key];
-    if (!dict1) {
-        dict1 = [NotActionNodeDict_NodeKey dictionary];
-        [self.notActionNodeDict_key setObject:dict1 forKey:key];
-    }
-    [dict1 setObject:notActionNode forKey:nodeKey];
-    
-    [self.notActionNodeDict_nodeKey setObject:notActionNode forKey:nodeKey];
-    [self unLiveClear_start];
+    [NotActionCenter actionQueuSyncDo:^{
+        NSString* hashKey = [NSString stringWithFormat:@"%ld", node.hash];
+        NotActionNode *notActionNode;
+        notActionNode = [self.notActionNodeDict_hash objectForKey:hashKey];
+        
+        NSString* class = NSStringFromClass([node class]);
+        NSString* newKey = key.length>0?key:class;
+        NSString* oldKey = notActionNode.key;
+        
+        if (oldKey) {
+            if ([oldKey isEqualToString:newKey]) {
+                return;
+            }
+            [self _unMountWithActionNode:notActionNode];
+        }
+        
+        notActionNode = [[NotActionNode alloc] init];
+        notActionNode.cls = class;
+        notActionNode.key = newKey;
+        notActionNode.hashKey = hashKey;
+        notActionNode.nodeObject = node;
+        
+        NotActionNodeDict_Key *dict0 = [self.notActionNodeDict_class objectForKey:class];
+        if (!dict0) {
+            dict0 = [NotActionNodeDict_Key dictionary];
+            [self.notActionNodeDict_class setObject:dict0 forKey:class];
+        }
+        
+        NotActionNodeDict_Hash *dict1 = [dict0 objectForKey:newKey];
+        if (!dict1) {
+            dict1 = [NotActionNodeDict_Hash dictionary];
+            [dict0 setObject:dict1 forKey:newKey];
+        }
+        [dict1 setObject:notActionNode forKey:hashKey];
+        
+        dict1 = [self.notActionNodeDict_key objectForKey:newKey];
+        if (!dict1) {
+            dict1 = [NotActionNodeDict_Hash dictionary];
+            [self.notActionNodeDict_key setObject:dict1 forKey:newKey];
+        }
+        [dict1 setObject:notActionNode forKey:hashKey];
+        
+        [self.notActionNodeDict_hash setObject:notActionNode forKey:hashKey];
+        [self unLiveClear_start];
+    }];
 }
 
 #pragma mark- unLiveClear
@@ -261,7 +284,7 @@ static NotActionCenter* _kDefaultCenter;
 }
 
 -(void)unLiveClear_next {
-    if([_notActionNodeDict_nodeKey allValues].count>0){
+    if([_notActionNodeDict_hash allValues].count>0){
         self.unLiveClearing = YES;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self unLiveClear_do];
@@ -273,9 +296,9 @@ static NotActionCenter* _kDefaultCenter;
 
 -(void)unLiveClear_do {
     [NotActionCenter actionQueuSyncDo:^{
-        NSArray * arr = [_notActionNodeDict_nodeKey allValues];
+        NSArray * arr = [_notActionNodeDict_hash allValues];
         for (NotActionNode *notActionNode in arr) {
-            if (notActionNode && !notActionNode.isLive) {
+            if (notActionNode && ![self isLiveCheck:notActionNode]) {
                 [self unMountWithActionNode:notActionNode];
             }
         }
@@ -283,6 +306,13 @@ static NotActionCenter* _kDefaultCenter;
     }];
 }
 
+-(BOOL)isLiveCheck:(NotActionNode*)notActionNode {
+    if (notActionNode.nodeObject && [_notActionNodeDict_hash objectForKey:notActionNode.hashKey]) {
+        return YES;
+    }else{
+        return NO;
+    }
+}
 @end
 
 
