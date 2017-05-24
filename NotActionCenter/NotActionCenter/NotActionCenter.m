@@ -128,7 +128,9 @@ static NotActionCenter* _kDefaultCenter;
             }
         }else{
             NSString *error = [NSString stringWithFormat:@"⚠️ toClass: %@ 未继承NotActionNodeProtocol协议", NSStringFromClass(cls)];
+//            NSException *excp = [NSException exceptionWithName:@"NotAction Error" reason:error userInfo:nil];
             NSAssert(NO, error);
+//            [excp raise];
         }
     }];
 }
