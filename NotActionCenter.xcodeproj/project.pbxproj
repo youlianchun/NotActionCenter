@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A914F7071F30121A003A5CFA /* MethodAspects.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A914F7061F30121A003A5CFA /* MethodAspects.framework */; };
 		A96F118B1E8A548400D36DFF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A96F118A1E8A548400D36DFF /* main.m */; };
 		A96F118E1E8A548400D36DFF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A96F118D1E8A548400D36DFF /* AppDelegate.m */; };
 		A96F11911E8A548400D36DFF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A96F11901E8A548400D36DFF /* ViewController.m */; };
@@ -21,6 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A914F7061F30121A003A5CFA /* MethodAspects.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MethodAspects.framework; sourceTree = "<group>"; };
 		A96F11861E8A548400D36DFF /* NotActionCenter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NotActionCenter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A96F118A1E8A548400D36DFF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		A96F118C1E8A548400D36DFF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -48,6 +50,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A914F7071F30121A003A5CFA /* MethodAspects.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -102,6 +105,7 @@
 		A96F11A01E8A549600D36DFF /* NotActionCenter */ = {
 			isa = PBXGroup;
 			children = (
+				A914F7061F30121A003A5CFA /* MethodAspects.framework */,
 				A96F11A71E8A626400D36DFF /* NSObject+NotAction.h */,
 				A96F11A81E8A626400D36DFF /* NSObject+NotAction.m */,
 				A96F11A11E8A54A000D36DFF /* NotActionCenter.h */,
@@ -143,7 +147,6 @@
 				TargetAttributes = {
 					A96F11851E8A548400D36DFF = {
 						CreatedOnToolsVersion = 8.3;
-						DevelopmentTeam = 5ATRCX89M9;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -313,10 +316,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 5ATRCX89M9;
+				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/NotActionCenter/NotActionCenter",
+				);
 				INFOPLIST_FILE = NotActionCenter/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.ppsports.ylchun.NotActionCenter;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/NotActionCenter/NotActionCenter/MethodAspects",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ylchun.NotActionCenter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -325,10 +336,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 5ATRCX89M9;
+				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/NotActionCenter/NotActionCenter",
+				);
 				INFOPLIST_FILE = NotActionCenter/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.ppsports.ylchun.NotActionCenter;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/NotActionCenter/NotActionCenter/MethodAspects",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ylchun.NotActionCenter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

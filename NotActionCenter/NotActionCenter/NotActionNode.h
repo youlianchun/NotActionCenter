@@ -28,6 +28,12 @@ extern NSString* const kNotActionCenter_UnMount;
 -(void)mountNotActionWithKey:(NSString*)key;//禁止实现接口
 
 /**
+ 延迟事件触发点
+
+ @param selector 执行该函数后触发延迟事件
+ */
+-(void)mountTriggerWithSelector:(SEL)selector;//禁止实现接口
+/**
  取消挂载
  */
 -(void)unMountNotAction;//禁止实现接口
@@ -51,6 +57,7 @@ extern NSString* const kNotActionCenter_UnMount;
  */
 -(BOOL)notActionTriggerNotActionAtOnceInManual;
 @end
+
 
 @interface NotActionNode : NSObject
 

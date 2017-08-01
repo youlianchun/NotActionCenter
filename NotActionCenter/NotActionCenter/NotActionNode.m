@@ -16,8 +16,8 @@ NSString* const kNotActionCenter_UnMount = @"kNotActionCenter_UnMount";
 @property (nonatomic, copy) NSString *key;
 @property (nonatomic, copy) NSString *hashKey;
 @property (nonatomic, weak) NSObject<NotActionNodeProtocol> * nodeObject;
-@property (nonatomic, retain) NSMutableArray <NSString*>*actionNameArray_allWillDo;//按照时间排序
-@property (nonatomic, retain) NSMutableDictionary <NSString *, id>* actionDict_allWillDo;//同名事件近保留最新一个
+@property (nonatomic, strong) NSMutableArray <NSString*>*actionNameArray_allWillDo;//按照时间排序
+@property (nonatomic, strong) NSMutableDictionary <NSString *, id>* actionDict_allWillDo;//同名事件近保留最新一个
 @end
 
 @implementation NotActionNode
@@ -89,3 +89,4 @@ NSString* const kNotActionCenter_UnMount = @"kNotActionCenter_UnMount";
 }
 
 @end
+

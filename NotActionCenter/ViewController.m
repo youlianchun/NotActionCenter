@@ -20,6 +20,7 @@
     [super viewDidLoad];
     self.title = [NSString stringWithFormat:@"Title%lu",self.navigationController.viewControllers.count];
     [self mountNotActionWithKey:self.title];
+    [self mountTriggerWithSelector:@selector(viewWillAppear:)];
 }
 
 
@@ -33,8 +34,5 @@
     self.lab.text = object;
     NSLog(@"notActionWithName_ViewController1");
 }
--(void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self manualTriggerNotAction];
-}
+
 @end

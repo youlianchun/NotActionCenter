@@ -23,9 +23,9 @@ typedef NSMutableDictionary<NSString*, NotActionNodeDict_Key *>  NotActionNodeDi
 @end
 
 @interface NotActionCenter ()
-@property (nonatomic, retain) NotActionNodeDict_Hash *notActionNodeDict_hash;
-@property (nonatomic, retain) NotActionNodeDict_Key *notActionNodeDict_key;
-@property (nonatomic, retain) NotActionNodeDict_Class *notActionNodeDict_class;
+@property (nonatomic, strong) NotActionNodeDict_Hash *notActionNodeDict_hash;//对象为一hash
+@property (nonatomic, strong) NotActionNodeDict_Key *notActionNodeDict_key;//挂载对象key组
+@property (nonatomic, strong) NotActionNodeDict_Class *notActionNodeDict_class;//挂载对象class组
 @property (nonatomic, assign) BOOL unLiveClearing;
 @end
 
